@@ -1,25 +1,9 @@
 [project]
 title = "Frax Balance Sheet"
 version = "0.1.0"
-port = 8501
-slug = "my-example-project-750213"
+slug = "preswald-frax"
 entrypoint = "hello.py"
 
-[dependencies]
-streamlit = "1.43.2"
-pandas = "2.2.3"
-plotly = "5.24.1"
-
-[branding]
-name = "Frax Balance Sheet"
-logo = "images/logo.png"
-favicon = "images/favicon.ico"
-primaryColor = "#F89613"
-
-[data.fraxbalancesheet_csv]
+[data.frax_assets]
 type = "csv"
-path = "data/fraxbalancesheet.csv"
-
-[logging]
-level = "INFO"
-format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+path = "data/frax_assets.csv"
