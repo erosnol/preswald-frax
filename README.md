@@ -1,26 +1,34 @@
 # Frax Balance Sheet
 
-A Streamlit application that visualizes Frax's balance sheet data, showing assets, liabilities, and key financial metrics.
+An interactive dashboard built with Preswald to analyze Frax's balance sheet data. Features include dynamic filtering, SQL queries, and beautiful visualizations.
 
 ## Features
-- Interactive dashboard showing total assets and liabilities
-- Detailed breakdown of asset and liability components
-- Visual representations including bar charts and pie charts
-- Key financial metrics and summaries
+- Interactive asset analysis with dynamic filtering
+- SQL-based querying for data exploration
+- Data visualization with scatter plots and pie charts
+- CSV-based data management for easy updates
 
-## Requirements
-```
-streamlit==1.43.2
-pandas==2.2.3
-plotly==5.24.1
-```
+## Running with Docker
+1. Build the Docker image:
+   ```bash
+   docker build -t frax-balance-sheet .
+   ```
 
-## Running the App
-1. Install dependencies:
+2. Run the container:
    ```bash
-   pip install -r requirements.txt
+   docker run -p 8501:8501 frax-balance-sheet
    ```
-2. Run the app:
-   ```bash
-   streamlit run hello.py
+
+3. Open the app in your browser:
    ```
+   http://localhost:8501
+   ```
+
+## Project Structure
+- `hello.py`: Main application code with Preswald components
+- `preswald.toml`: Configuration for data sources and app settings
+- `data/frax_assets.csv`: Asset data in CSV format
+- `Dockerfile`: Docker configuration for containerized deployment
+
+## Development
+This app is built using the Preswald framework, which provides powerful tools for building interactive data apps. The app runs in a Docker container for consistent development and deployment.
