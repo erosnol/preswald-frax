@@ -1,73 +1,60 @@
-from preswald import connect, get_df, text, metric, columns, plotly
+from preswald import connect, get_df, query, text, table, slider, plotly
 import plotly.express as px
 
-# Initialize Preswald connection
+# Initialize connection to preswald.toml data sources
 connect()
 
-# Load data from preswald.toml
-assets_df = get_df('frax_assets')
-liabilities_df = get_df('frax_liabilities')
+# Load data
+df = get_df("frax_assets")
 
-# Convert to dictionary format
-data = {
-    'Assets': {row['name']: row['value'] for row in assets_df},
-    'Liabilities': {row['name']: row['value'] for row in liabilities_df}
-}
+# Display header
+text("# Frax Balance Sheet Analysis")
+text("## Overview")
 
-# Calculate totals
-total_assets = sum(data['Assets'].values())
-total_liabilities = sum(data['Liabilities'].values())
-balance = total_assets - total_liabilities
-locked_liquidity = 41259611
-final_balance = balance + locked_liquidity
+# Display total assets
+total_assets = df["value"].sum()
+text(f"Total Assets: ${total_assets:,.0f}")
 
-text("# Frax Balance Sheet")
+# Query major assets
+sql = "SELECT * FROM frax_assets WHERE value > 50000000 ORDER BY value DESC"
+filtered_df = query(sql, "frax_assets")
+table(filtered_df, title="Major Assets (>$50M)")
 
-# Display totals
-col1, col2 = columns(2)
-with col1:
-    metric("Total Assets", f"${total_assets:,.0f}")
-    metric("Total Liabilities", f"${total_liabilities:,.0f}")
-with col2:
-    metric("Net Balance", f"${balance:,.0f}")
-    metric("Final Balance", f"${final_balance:,.0f}")
+# Add interactive controls
+text("## Interactive Analysis")
+threshold = slider("Asset Value Threshold ($M)", min_val=0, max_val=200, default=50)
 
-# Display detailed breakdown
-text("## Assets")
-for name, value in data['Assets'].items():
-    text(f"{name}: ${value:,.0f}")
-text(f"**Total Assets: ${total_assets:,.0f}**")
+# Create dynamic view based on threshold
+filtered_by_threshold = df[df["value"] > threshold * 1000000]
+if not filtered_by_threshold.empty:
+    table(filtered_by_threshold, title="Dynamic Asset View")
+    text(f"Found {len(filtered_by_threshold)} assets above ${threshold}M")
+else:
+    text("No assets found above the threshold")
 
-text("## Liabilities")
-for name, value in data['Liabilities'].items():
-    text(f"{name}: ${value:,.0f}")
-text(f"**Total Liabilities: ${total_liabilities:,.0f}**")
-
-text("## Summary")
-text(f"Balance: ${balance:,.0f}")
-text(f"Locked Liquidity: ${locked_liquidity:,.0f}")
-text(f"Final Balance: ${final_balance:,.0f}")
-
-# Add visualizations
+# Create visualizations
 text("## Visualizations")
 
-# Bar chart comparing assets and liabilities
-col1, col2 = columns(2)
-with col1:
-    df_bar = {
-        'Category': ['Assets', 'Liabilities'],
-        'Amount': [total_assets, total_liabilities]
-    }
-    fig_bar = px.bar(df_bar, x='Category', y='Amount', title='Assets vs Liabilities')
-    fig_bar.update_traces(texttemplate='$%{y:,.0f}', textposition='outside')
-    plotly(fig_bar)
+# Scatter plot showing asset distribution
+fig_scatter = px.scatter(
+    df,
+    x="name",
+    y="value",
+    title="Asset Distribution",
+    labels={"name": "Asset Name", "value": "Value ($)"},
+    height=400
+)
+fig_scatter.update_traces(marker=dict(size=12))
+fig_scatter.update_layout(xaxis_tickangle=-45)
+plotly(fig_scatter)
 
-# Pie chart showing asset breakdown
-with col2:
-    df_pie = {
-        'Asset': list(data['Assets'].keys()),
-        'Value': list(data['Assets'].values())
-    }
-    fig_pie = px.pie(df_pie, values='Value', names='Asset', title='Asset Composition')
-    fig_pie.update_traces(texttemplate='%{label}<br>$%{value:,.0f}', textposition='inside')
-    plotly(fig_pie)
+# Pie chart showing asset composition
+fig_pie = px.pie(
+    df,
+    values="value",
+    names="name",
+    title="Asset Composition",
+    height=500
+)
+fig_pie.update_traces(textposition='inside', textinfo='percent+label')
+plotly(fig_pie)

@@ -4,21 +4,6 @@ version = "0.1.0"
 slug = "preswald-frax"
 entrypoint = "hello.py"
 
-[data]
-frax_assets = [
-    { name = "Owned FRAX", value = 181581142 },
-    { name = "Owned FRAX-USD", value = 171673338 },
-    { name = "Owned USD", value = 23706675 },
-    { name = "Owned Volatile", value = 20222278 },
-    { name = "Owned FRAX Volatile", value = 7920238 },
-    { name = "Owned FRAX-FXS", value = 6836785 },
-    { name = "Owned FXS Volatile", value = 122713 },
-    { name = "Lent FRAX", value = 22443069 },
-    { name = "Lent USD", value = 565837 }
-]
-
-frax_liabilities = [
-    { name = "FRAX circulating supply", value = 432493859 },
-    { name = "Borrowed USD stablecoins", value = 20934904 },
-    { name = "FXS circulating supply", value = 9988448 }
-]
+[data.frax_assets]
+type = "csv"
+path = "data/frax_assets.csv"
