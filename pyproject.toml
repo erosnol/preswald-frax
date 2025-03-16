@@ -3,16 +3,20 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "preswald-app"
+name = "frax-balance-sheet"
 version = "0.1.0"
-description = "A Preswald application"
+description = "Frax Balance Sheet Analysis"
 requires-python = ">=3.8"
 dependencies = [
-    "preswald"
+    "preswald",
+    "streamlit==1.43.2",
+    "pandas==2.2.3",
+    "plotly==5.24.1"
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
+
 
 [tool.black]
 line-length = 88

@@ -1,3 +1,11 @@
 secrets.toml
 .preswald_deploy
-.env.structured
+.env
+.env.*
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+.idea/
+.preswald_deploy/
+frax-balance-sheet/.structured
